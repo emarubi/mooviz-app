@@ -53,7 +53,7 @@ const MovieDetails = () => {
 
     useEffect(() => {
         submitSearch()
-    },[])
+    })
     
     const handleClick = () => {
         navigate(-1)
