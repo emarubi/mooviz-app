@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import { REACT_APP_API_URL } from '../HomePage';
 
@@ -25,7 +25,7 @@ const MovieDetails = () => {
     const param = useParams();
     const navigate = useNavigate();
 
-    const submitSearch = async () => {
+    const submitSearch = useCallback(async () => {
         console.log('param.id', param.id)
         const result = await fetch(`${REACT_APP_API_URL}/`, {
             method: 'POST',
@@ -49,11 +49,12 @@ const MovieDetails = () => {
             setErrorMessage(json.Error);
         }
         })
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [param.id])
 
     useEffect(() => {
         submitSearch()
-    })
+    }, [submitSearch])
     
     const handleClick = () => {
         navigate(-1)
