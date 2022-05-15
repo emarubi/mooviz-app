@@ -25,6 +25,11 @@ function App() {
     }
   })
 
+  useEffect(() => {
+    window.localStorage.removeItem('searchValue');
+  }, []);
+  console.log('localStorage', localStorage)
+
   return (
     <>
       <div className="App">

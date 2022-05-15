@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { REACT_APP_API_URL } from '../HomePage';
 
@@ -15,20 +15,7 @@ const MovieList = () => {
     const [searchValue, setSearchValue] = useState<string>(localStorage.getItem('searchValue') || '');
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/movies`)
-        .then(response => response.json())
-        .then((json) => {
-        console.log('json', json)
-        if (json.Search) {
-            setMovies(json.Search);
-        }
-        })
-        window.localStorage.setItem('searchValue', searchValue);
-        submitSearch()
-    }, [searchValue])
-
-    const submitSearch = async () => {
+    const submitSearch = useCallback(async () => {
         window.localStorage.setItem('searchValue', searchValue);
         const result = await fetch(`${REACT_APP_API_URL}/`, {
           method: 'POST',
@@ -51,7 +38,22 @@ const MovieList = () => {
             setErrorMessage(json.Error);
         }
         })
-    }
+    }, [searchValue])
+
+
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/movies`)
+        .then(response => response.json())
+        .then((json) => {
+        console.log('json', json)
+        if (json.Search) {
+            setMovies(json.Search);
+        }
+        })
+        window.localStorage.setItem('searchValue', searchValue);
+        submitSearch()
+    }, [searchValue, submitSearch])
+
 
     return (
         <>
